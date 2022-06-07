@@ -165,6 +165,8 @@ void Logging::print(const char *format, va_list args) {
 
 void Logging::printFormat(const char format, va_list *args) {
 #ifndef DISABLE_LOGGING
+	// portMUX_TYPE mutex = portMUX_INITIALIZER_UNLOCKED;
+	// taskENTER_CRITICAL(&mutex);
 	if (format == '\0') return;
 	if (format == '%')
 	{
@@ -230,13 +232,19 @@ void Logging::printFormat(const char format, va_list *args) {
 	}
 	else if( format == 'C' ) {
 		register char c = (char) va_arg( *args, int );
-		if (c>=0x20 && c<0x7F) {
-			_logOutput->print(c);
-		} else {
-			_logOutput->print("0x");
-			if (c<0xF) _logOutput->print('0');
-			_logOutput->print(c, HEX);
-		}
+
+
+		// if (c>=0x20 && c<0x7F) {
+		// 	_logOutput->print(c);
+		// } else {
+		// 	_logOutput->print("0x");
+		// 	if (c<0xF) _logOutput->print('0');
+		// 	_logOutput->print(c, HEX);
+		// }
+		
+		_logOutput->print("0x");
+		if (c<0xF) _logOutput->print('0');
+		_logOutput->print(c, HEX);
     }
 	else if(format == 't')
 	{
@@ -260,6 +268,7 @@ void Logging::printFormat(const char format, va_list *args) {
 			_logOutput->print(F("false"));
 		}
 	}
+	// taskEXIT_CRITICAL(&mutex);
 #endif
 }
  
